@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Job {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  companyName    String   @map("company_name")
+  companyLogo    String?  @map("company_logo")
+  location       String
+  isRemote       Boolean  @default(false) @map("is_remote")
+  salaryMin      Int?     @map("salary_min")
+  salaryMax      Int?     @map("salary_max")
+  salaryCurrency String?  @default("USD") @map("salary_currency")
+  tags           String[] @default([])
+  description    String
+  status         String   @default("pending_payment")
+  userId         String?  @db.Uuid @map("user_id")
+  createdAt      DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+
+  @@map("jobs")
+}

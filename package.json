@@ -1,0 +1,33 @@
+{
+  "name": "CreativeJobsList",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
+    "stripe:trigger": "stripe trigger checkout.session.completed"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.95",
+    "@iconify-json/simple-icons": "^1.2.72",
+    "@nuxt/ui": "^4.5.1",
+    "@nuxtjs/supabase": "^2.0.4",
+    "@prisma/client": "^6.19.2",
+    "nuxt": "^4.3.1",
+    "stripe": "^20.4.0",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.15.2",
+    "eslint": "^10.0.2",
+    "prisma": "^6.19.2",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.5"
+  },
+  "packageManager": "pnpm@10.30.3"
+}
