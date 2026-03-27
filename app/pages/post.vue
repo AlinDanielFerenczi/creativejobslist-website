@@ -1,44 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+const user = useSupabaseUser()
 
 const title = ref('')
 const company = ref('')
 const location = ref('')
 const remote = ref(false)
 const description = ref('')
-const salaryMin = ref()
-const salaryMax = ref()
+const salaryMin = ref<number>()
+const salaryMax = ref<number>()
 const tags = ref('')
 
 const loading = ref(false)
+const error = ref('')
 
 const handlePostJob = async () => {
+  error.value = ''
+
+  if (!user.value) {
+    navigateTo('/login')
+    return
+  }
+
   loading.value = true
-  
+
   try {
-    // In a real application, you would create the job in Supabase here with a status of 'pending_payment'
-    // Then call your server endpoint to create a Stripe checkout session
-    
-    const response = await $fetch('/api/checkout', {
+    const parsedTags = tags.value
+      ? tags.value.split(',').map(t => t.trim()).filter(Boolean)
+      : []
+
+    const { id: jobId } = await $fetch('/api/jobs/create', {
       method: 'POST',
       body: {
         title: title.value,
-        company: company.value,
-        priceId: 'price_dummy123' // Replace with your actual Stripe Price ID
+        companyName: company.value,
+        location: location.value,
+        isRemote: remote.value,
+        salaryMin: salaryMin.value,
+        salaryMax: salaryMax.value,
+        tags: parsedTags,
+        description: description.value
       }
     })
-    
-    // Redirect to Stripe checkout
+
+    const response = await $fetch('/api/checkout', {
+      method: 'POST',
+      body: {
+        jobId,
+        title: title.value,
+        company: company.value
+      }
+    })
+
     if (response.url) {
       window.location.href = response.url
     } else {
-      alert('Simulated Stripe checkout! In a real app, you would be redirected to Stripe to pay $299.')
-      loading.value = false
-      navigateTo('/')
+      navigateTo('/success')
     }
-  } catch (error) {
-    console.error(error)
-    alert('Error connecting to Stripe checkout.')
+  } catch (err: any) {
+    console.error(err)
+    error.value = err.data?.message || err.statusMessage || 'Something went wrong. Please try again.'
     loading.value = false
   }
 }
@@ -51,6 +71,8 @@ const handlePostJob = async () => {
       <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Reach the world's top creatives</h1>
       <p class="text-gray-600 dark:text-gray-400">Post a job for 30 days. Reach over 50k+ designers, illustrators, and artists.</p>
     </div>
+
+    <UAlert v-if="error" color="error" variant="soft" :title="error" class="mb-6" />
     
     <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
       <!-- Header -->

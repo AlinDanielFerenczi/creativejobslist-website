@@ -34,10 +34,9 @@ export default defineEventHandler(async (event) => {
             success_url: `${config.public.siteUrl || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${config.public.siteUrl || 'http://localhost:3000'}/post`,
             metadata: {
+                jobId: body.jobId,
                 jobTitle: body.title,
                 companyName: body.company
-                // Here you would also include the job ID from Supabase to update its status via Webhook later:
-                // jobId: body.jobId 
             }
         })
 
