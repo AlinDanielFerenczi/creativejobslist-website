@@ -55,11 +55,23 @@ export default defineEventHandler(async (event) => {
             }
             break
 
-        case 'checkout.session.expired':
+        case 'checkout.session.expired': {
             const expiredSession = stripeEvent.data.object as Stripe.Checkout.Session
-            console.log(`❌ Checkout expired for session ${expiredSession.id}`)
-            // TODO: Clean up incomplete jobs in Supabase
+            console.log(`Checkout expired for session ${expiredSession.id}`)
+            const expiredJobId = expiredSession.metadata?.jobId
+            if (expiredJobId) {
+                try {
+                    const prismaClient = (await import('../utils/prisma')).default
+                    await prismaClient.job.delete({
+                        where: { id: expiredJobId, status: 'pending_payment' }
+                    })
+                    console.log(`Deleted pending job ${expiredJobId} after expired checkout`)
+                } catch (err) {
+                    console.error('Error deleting expired job:', err)
+                }
+            }
             break
+        }
 
         default:
             console.log(`Unhandled event type: ${stripeEvent.type}`)
