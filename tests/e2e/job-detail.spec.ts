@@ -11,8 +11,8 @@ test.describe('Job detail page', () => {
 
     await page.goto(`/jobs/${job.id}`)
     await expect(page.getByRole('heading', { name: job.title })).toBeVisible()
-    await expect(page.getByText(job.companyName)).toBeVisible()
-    await expect(page.getByText(job.location)).toBeVisible()
+    await expect(page.getByText(job.companyName).first()).toBeVisible()
+    await expect(page.getByText(job.location).first()).toBeVisible()
     await expect(page.getByText('Remote Accepted')).toBeVisible()
   })
 
@@ -42,8 +42,9 @@ test.describe('Job detail page', () => {
 
     await page.goto(`/jobs/${job.id}`)
     await expect(page.getByText('Required Skills')).toBeVisible()
+    const skillsSection = page.locator('.flex.flex-wrap.gap-2')
     for (const tag of job.tags) {
-      await expect(page.getByText(tag, { exact: true })).toBeVisible()
+      await expect(skillsSection.getByText(tag, { exact: true })).toBeVisible()
     }
   })
 

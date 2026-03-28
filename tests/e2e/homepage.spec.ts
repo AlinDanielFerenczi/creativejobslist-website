@@ -17,16 +17,18 @@ test.describe('Homepage', () => {
 
   test('displays job listings from API', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText('Senior Product Designer')).toBeVisible()
-    await expect(page.getByText('Motion Graphics Artist')).toBeVisible()
-    await expect(page.getByText('Illustrator')).toBeVisible()
+    const jobList = page.locator('.space-y-4')
+    await expect(jobList.getByText('Senior Product Designer')).toBeVisible()
+    await expect(jobList.getByText('Motion Graphics Artist')).toBeVisible()
+    await expect(jobList.getByText('Illustrator')).toBeVisible()
   })
 
   test('shows company names on job cards', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText('Figma')).toBeVisible()
-    await expect(page.getByText('Netflix')).toBeVisible()
-    await expect(page.getByText('Dropbox')).toBeVisible()
+    const jobList = page.locator('.space-y-4')
+    await expect(jobList.getByText('Figma').first()).toBeVisible()
+    await expect(jobList.getByText('Netflix').first()).toBeVisible()
+    await expect(jobList.getByText('Dropbox').first()).toBeVisible()
   })
 
   test('search filters jobs by title', async ({ page }) => {
@@ -45,10 +47,11 @@ test.describe('Homepage', () => {
 
   test('remote filter shows only remote jobs', async ({ page }) => {
     await page.goto('/')
+    const jobList = page.locator('.space-y-4')
     await page.getByLabel('Remote Only').check()
-    await expect(page.getByText('Senior Product Designer')).toBeVisible()
-    await expect(page.getByText('Illustrator')).toBeVisible()
-    await expect(page.getByText('Motion Graphics Artist')).not.toBeVisible()
+    await expect(jobList.getByText('Senior Product Designer')).toBeVisible()
+    await expect(jobList.getByText('Illustrator')).toBeVisible()
+    await expect(jobList.getByText('Motion Graphics Artist')).not.toBeVisible()
   })
 
   test('shows empty state when no jobs match', async ({ page }) => {
