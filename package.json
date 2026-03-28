@@ -9,6 +9,8 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
     "stripe:trigger": "stripe trigger checkout.session.completed"
   },
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
+    "@playwright/test": "^1.58.2",
     "eslint": "^10.0.2",
     "prisma": "^6.19.2",
     "typescript": "^5.9.3",
