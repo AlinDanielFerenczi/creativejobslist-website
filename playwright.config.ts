@@ -13,10 +13,6 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry'
   },
-  webServer: {
-    command: `pnpm dev --port ${PORT}`,
-    port: PORT,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000
-  }
+  /* Dev server runs in Docker (VC/docker-compose.yml, port 3002).
+     No webServer block needed locally. CI can override via env. */
 })
